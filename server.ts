@@ -20,10 +20,6 @@ dotenv.config();
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/", (req: Request, res: Response) => {
-  res.status(httpStatus.OK).json({ app_name: "realtime-chat-app", version: "0.0.1" });
-});
-
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/users", userRoutes);
