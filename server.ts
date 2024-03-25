@@ -12,6 +12,7 @@ import errorHandlerMiddleware from "./middlewares/error-handler.middleware";
 
 import { app, server } from "./socket/socket";
 import path from "path";
+import httpStatus from "http-status";
 
 const port = process.env.PORT || 4000;
 
@@ -21,6 +22,10 @@ dotenv.config();
 
 app.use(express.json());
 app.use(cookieParser());
+
+app.use("/", (req: Request, res: Response) => {
+  res.status(httpStatus.OK).json({ app_name: "realtime-chat-app", version: "0.0.1" });
+});
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
