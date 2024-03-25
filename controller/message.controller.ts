@@ -3,6 +3,7 @@ import httpStatus from "http-status";
 import { CustomeRequest } from "../middlewares/protect-route.middleware";
 import Conversation from "../models/conversation.model";
 import Message from "../models/message.model";
+import { getRecieverSocketId, io } from "../socket/socket";
 
 class MesssageController {
   static SEND = async (req: CustomeRequest, res: Response) => {
@@ -36,6 +37,12 @@ class MesssageController {
 
       // This would run in parallel
       await Promise.all([conversation.save(), newMessage.save()]);
+
+      // socket.io functionality
+      const recieverSocketId = getRecieverSocketId(receiverId);
+      if (recieverSocketId) {
+        io.to(recieverSocketId).emit("newMessage", newMessage);
+      }
 
       res.status(httpStatus.CREATED).json(newMessage);
     } catch (error: any) {
